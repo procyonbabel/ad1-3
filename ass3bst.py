@@ -8,11 +8,11 @@ from __future__ import print_function
 
 
 
-# Name 1:
+# Name 1: Caroline Appleby
 
-# Name 2:
+# Name 2: Chiao-ting Fang
 
-# Name 3:
+# Name 3: Linjing Fu
 
 
 
@@ -61,3 +61,15 @@ def treefromlist(l):
         t = insert(t, l[x])
 
     return t
+
+#TODO: Does anyone know how to print all the numbers in a line?
+# used print(t[0], end= " ") but it doesn't look nice...
+def inorderwalk(t): # print all the keys in tree t in sorted order
+    if t[0] != None: # if the root of the tree is not nil
+        if t[1] !=None: # if there is a left branch
+            inorderwalk(t[1]) # walk through the left branch 
+        print(t[0])    # print the root after checking all the nodes to the left (the root is now the smallest)
+        if t[2] !=None: # if there is a right branch
+            inorderwalk(t[2]) # walk through the right branch
+
+    
