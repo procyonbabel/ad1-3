@@ -7,7 +7,7 @@ from __future__ import print_function
 
 
 # Create empty tree
-def emptytree ():
+def emptytree():
     return None
 
 
@@ -28,13 +28,13 @@ def insert(t, x):
 # Create tree by inserting each element in l into an initially empty tree
 def treefromlist(l):
     t = emptytree()
-    for x in range(0,(len(l))):
+    for x in range(0, (len(l))):
         t = insert(t, l[x])
     return t
 
 
-def inorderwalk(t): # print all the keys in tree t in sorted order
-    if t[0]: # if the root of the tree is not nil
+def inorderwalk(t):  # print all the keys in tree t in sorted order
+    if t[0]:  # if the root of the tree is not nil
         if t[1]:  # if there is a left branch
             inorderwalk(t[1])  # walk through the left branch
         print(t[0], end=" ")    # print the root after checking all the nodes to the left (the root is now the smallest)
@@ -42,38 +42,38 @@ def inorderwalk(t): # print all the keys in tree t in sorted order
             inorderwalk(t[2])  # walk through the right branch
 
 
-
 def delete(t, k):
     # remove k from tree t
-    t = to_list(t)
-    q, p = find_node_and_parent(t, k)
-    if not p:
-        raise KeyError      # k not found
+    t = to_list(t)  # so its elements can be changed
+    parent, key = find_node_and_parent(t, k)
+    if not key:
+        raise KeyError  # k not found
    
-    if None not in (p[1], p[2]):   # k has two children
-        r, q = find_min(p[2], p)
-        p[0] = r[0]
-        p = r   
-    
-    if (not p[1]) and (not p[2]):  # k is a leaf
-        if not q:  # you deleted the only item in the tree
-            t = None
-        elif p[0] < q[0]:
-            q[1] = None
-        else:
-            q[2] = None
+    if None not in (key[1], key[2]):   # k has two children
+        small, parent = find_min(key[2], key)  # find the smallest node in the subtree
+        key[0] = small[0]
+        key = small
 
-    elif (not p[1]) or (not p[2]): # k has one child
-        # c is the child which isn't None
-        c = p[1]
-        if not c: 
-            c = p[2]
-        if not q:  # that was the root you deleted
-            t = c
-        elif p[0] < q[0]:
-            q[1] = c
+    if (not key[1]) and (not key[2]):  # k is a leaf
+        # set parent.left or .right to None, no subsequent children to care about
+        if not parent:  # you deleted the only item in the tree
+            t = None
+        elif key[0] < parent[0]:
+            parent[1] = None
         else:
-            q[2] = c
+            parent[2] = None
+
+    elif (not key[1]) or (not key[2]):  # k has one child
+        # c is the child of k which isn't None
+        c = key[1]  # guess that its the left child
+        if not c: 
+            c = key[2]
+        if not parent:  # you are deleting the root of the tree
+            t = c
+        elif key[0] < parent[0]:
+            parent[1] = c
+        else:
+            parent[2] = c
     t = to_tuple(t)
     return t
 
@@ -109,7 +109,7 @@ def to_tuple(t):
     return tuple(map(to_tuple, t)) if isinstance(t, (tuple, list)) else t
 
 
-#TODO delete this before submission, just here for testing
+# TODO delete this before submission, just here for testing
 if __name__ == "__main__":
     tree = treefromlist([4, 2, 6, 5, 8, 9])
     print(tree)
