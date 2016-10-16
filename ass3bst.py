@@ -50,27 +50,27 @@ def delete(t, k):
     if not p:
         raise KeyError      # k not found
    
-    if None not in (left(p), right(p)):   # k has two children
-        r, q = find_min(right(p), p)
+    if None not in (p[1], p[2]):   # k has two children
+        r, q = find_min(p[2], p)
         p[0] = r[0]
         p = r   
     
-    if (not left(p)) and (not right(p)):  # k is a leaf
+    if (not p[1]) and (not p[2]):  # k is a leaf
         if not q:  # you deleted the only item in the tree
             t = None
-        elif key(p) < key(q):
+        elif p[0] < q[0]:
             q[1] = None
         else:
             q[2] = None
 
-    elif (not left(p)) or (not right(p)): # k has one child
+    elif (not p[1]) or (not p[2]): # k has one child
         # c is the child which isn't None
-        c = left(p)
+        c = p[1]
         if not c: 
-            c = right(p)
+            c = p[2]
         if not q:  # that was the root you deleted
             t = c
-        elif key(p) < key(q):
+        elif p[0] < q[0]:
             q[1] = c
         else:
             q[2] = c
@@ -82,40 +82,24 @@ def find_node_and_parent(tree, x):
     # locate a node with key x in the tree, return that node and its parent
     parent = None  
     current = tree
-    while current and (key(current) != x):
+    while current and (current[0] != x):
         parent = current
-        if x < key(current):
-            current = left(current)
+        if x < current[0]:
+            current = current[1]
         else:
-            current = right(current)
+            current = current[2]
     return parent, current
 
 
 def find_min(node, parent):
-    #Return the smallest element under node and its parent.
+    #  Return the smallest element under node and its parent.
     if node is None: 
         return None
-    while left(node) is not None:
+    while node[1] is not None:
         parent = node
-        node = left(node)
+        node = node[1]
     return node, parent
         
-
-def key(tree):
-    return tree[0]
-
-
-def left(tree):
-    return tree[1]
-
-
-def right(tree):
-    return tree[2]
-
-
-def isleaf(tree):
-    return left(tree) is None and right(tree) is None
-
 
 def to_list(t):
     return list(map(to_list, t)) if isinstance(t, (list, tuple)) else t
@@ -125,17 +109,7 @@ def to_tuple(t):
     return tuple(map(to_tuple, t)) if isinstance(t, (tuple, list)) else t
 
 
-def get_index(lst, target):
-    for index, item in enumerate(lst):
-        if item == target:
-            return [index]
-        if isinstance(item, (list, tuple)):
-            path = get_index(item, target)
-            if path:
-                return [index] + path
-    return []
-
-
+#TODO delete this before submission, just here for testing
 if __name__ == "__main__":
     tree = treefromlist([4, 2, 6, 5, 8, 9])
     print(tree)
@@ -147,3 +121,6 @@ if __name__ == "__main__":
     print(tree)
     tree = delete(tree, 4)
     print(tree)
+    tree2 = treefromlist([3])
+    tree2 = delete(tree2, 3)
+    print(tree2)
